@@ -2,7 +2,9 @@ from PPlay.window import *
 from PPlay.gameimage import *
 from PPlay.sprite import *
 
+# Criando o Menu
 def menu():
+    # fazendo o fundo e colocando os assets das configurações no menu com suas respecitivas posições.
     janela = Window(1000, 600)
     mouse = janela.get_mouse()
     janela.set_title("MENU SPACE INVADERS VICTOR TELES")
@@ -20,14 +22,14 @@ def menu():
     dific.set_position((janela.width - dific.width) / 2, dific.height * 6)
     sair.set_position((janela.width - jogar.width) / 2, jogar.height * 8)
 
-
+    # Fazendo com que cada configuração receba uma função de comando
     while True:
         if mouse.is_button_pressed(1):
             if mouse.is_over_object(jogar):
                 game()
             if mouse.is_over_object(dific):
                 dificuldade()
-            if mouse.is_over_object(sair):
+            if mouse.is_over_object(sair): #se apertar sair o jogo fecha.
                 janela.close()
         fundo.draw()
         titulo.draw()
@@ -38,18 +40,21 @@ def menu():
         sair.draw()
         janela.update()
 
+# função jogar:
 def game():
     janela = Window(1000, 600)
     fundo = GameImage("assets\\fundo.png")
     janela.set_title("JOGO SPACE INVADERS VICTOR TELES")
     teclado = janela.get_keyboard()
     while True:
-        if teclado.key_pressed("esc"):
+        if teclado.key_pressed("esc"): # se apertar esc volta pro menu
             menu()
         fundo.draw()
         janela.update()
 
+# função dificuldade
 def dificuldade():
+    # criando os assets das dificuldades e suas posições.
     janela = Window(1000, 600)
     fundo = GameImage("assets\\fundo.png")
     janela.set_title("DIFICULDADES SPACE INVADERS VICTOR TELES")

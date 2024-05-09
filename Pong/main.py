@@ -9,7 +9,7 @@ teclado = janela.get_keyboard()
 janela.set_background_color((0,0,0))
 janela.set_title("Pong_Victor_Teles")
 fundo = GameImage("assets\\Fundo.jpg")
-bolinha = Sprite("assets\\vicente.jpg")
+bolinha = Sprite("assets\\bolinha.png")
 pad1 = Sprite("assets\\PadD.png")
 pad2 = Sprite("assets\\PadE.png")
 
@@ -140,8 +140,8 @@ while True:
     pad2.draw()
 
 # colocando "jogador 1" e "2"
-    janela.draw_text("Vicente", (janela.width /2) - 350, 30, size=30, font_name="ComicSans", bold=True,color=[255, 255, 255])
-    janela.draw_text("Amélia", (janela.width / 2) + 200, 30, size=30, font_name="ComicSans", bold=True,color = [255, 255, 255])
+    janela.draw_text("Jogador 1", (janela.width /2) - 350, 30, size=30, font_name="ComicSans", bold=True,color=[255, 255, 255])
+    janela.draw_text("Jogador 2", (janela.width / 2) + 200, 30, size=30, font_name="ComicSans", bold=True,color = [255, 255, 255])
 
 # colocando a pontuação escrita
     janela.draw_text(str(pontDireito), (janela.width / 2) - 75, 60, size=52, font_name="ComicSans", bold=True,
