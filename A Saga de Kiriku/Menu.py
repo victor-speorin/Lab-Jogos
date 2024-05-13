@@ -90,28 +90,40 @@ def game():
     janela = Window(1100, 619)
     fundo = GameImage("Assets/Fundo3.jpg")
     janela.set_title("JOGAR KIRIKU")
-    inimigo = Sprite("Assets\\inimigo1.png")
+    personagem = Sprite("Assets\\inimigo1.png")
     inimigo2 = Sprite("Assets\\inimigo2.png")
-    inimigo.x = (janela.width - janela.height) / 2
-    inimigo.y = janela.height - inimigo.height
+    personagem.x = (janela.width - janela.height) / 2
+    personagem.y = janela.height - personagem.height
     inimigo2.x = (janela.width - janela.height) / 2
     inimigo2.y = janela.height - inimigo2.height
     comandos = Window.get_keyboard()
     velini1 = 400
     velini2 = 400
     teclado = janela.get_keyboard()
+    # Define a velocidade de pulo
+    velocidade_pulo = 3.5
+
+    # Define a gravidade
+    gravidade = 0.025
+
+    # Define a velocidade vertical inicial
+    velocidade_vertical = 0
+
+    # Define se o personagem está no chão
+    no_chao = True
+
     while True:
         fundo.draw()
         if teclado.key_pressed("esc"):
             menu()
         if (comandos.key_pressed("A")):
-            inimigo.x -= velini1 * janela.delta_time()
+            personagem.x -= velini1 * janela.delta_time()
         if (comandos.key_pressed("D")):
-            inimigo.x += velini1 * janela.delta_time()
-        if (inimigo.x <= 0):
-            inimigo.x = 0
-        if (inimigo.x >= janela.width - inimigo.width):
-            inimigo.x = janela.width - inimigo.width
+            personagem.x += velini1 * janela.delta_time()
+        if (personagem.x <= 0):
+            personagem.x = 0
+        if (personagem.x >= janela.width - personagem.width):
+            personagem.x = janela.width - personagem.width
 
         if (comandos.key_pressed("left")):
             inimigo2.x -= velini2 * janela.delta_time()
@@ -121,7 +133,24 @@ def game():
             inimigo2.x = 0
         if (inimigo2.x >= janela.width - inimigo2.width):
             inimigo2.x = janela.width - inimigo2.width
-        inimigo.draw()
+            # Se a tecla de pulo for pressionada e o personagem estiver no chão
+        if teclado.key_pressed("UP") and no_chao:
+                # Faz o personagem pular
+            velocidade_vertical = -velocidade_pulo
+            no_chao = False
+
+            # Aplica a gravidade
+        velocidade_vertical += gravidade
+
+            # Atualiza a posição vertical do personagem
+        personagem.y += velocidade_vertical
+
+            # Se o personagem estiver abaixo do chão
+        if personagem.y > janela.height - personagem.height:
+                # Coloca o personagem no chão
+            personagem.y = janela.height - personagem.height
+            no_chao = True
+        personagem.draw()
         inimigo2.draw()
         janela.draw_text("0000 m", 900, 50, size=16, font_name="Tempus Sans ITC", bold=True,
                          color=[0, 0, 0])
