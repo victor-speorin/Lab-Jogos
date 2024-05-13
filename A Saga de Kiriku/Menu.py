@@ -42,14 +42,22 @@ def Tutorial():
     jump = Sprite("Assets\\Jump.png")
     djump = Sprite("Assets\\DoubleJump.png")
     w = Sprite("Assets\\W.png")
+    w2 = Sprite("Assets\\W.png")
+    w3 = Sprite("Assets\\W.png")
     space = Sprite("Assets\\Space.png")
+    space2 = Sprite("Assets\\Space.png")
+    space3 = Sprite("Assets\\Space.png")
     fundo = GameImage("Assets/TutoF.jpg")
     voltar = Sprite("Assets\\Voltar.png")
     voltar.set_position(10, 10)
-    jump.set_position(750, 50)
-    space.set_position(750, 120)
-    djump.set_position(50, -100)
-    w.set_position(50, -100)
+    jump.set_position(750, 70)
+    space.set_position(700, 140)
+    w.set_position(845, 140)
+    djump.set_position(750, 270)
+    space2.set_position(700, 340)
+    space3.set_position(845, 340)
+    w2.set_position(700, 420)
+    w3.set_position(845, 420)
     janela.set_title("TUTORIAL KIRIKU")
     teclado = janela.get_keyboard()
     while True:
@@ -63,7 +71,11 @@ def Tutorial():
         djump.draw()
         jump.draw()
         space.draw()
+        space2.draw()
+        space3.draw()
         w.draw()
+        w2.draw()
+        w3.draw()
         janela.update()
 def game():
     janela = Window(1100, 619)
@@ -76,36 +88,4 @@ def game():
         fundo.draw()
         janela.update()
 
-def dificuldade():
-    janela = Window(1000, 600)
-    mouse = janela.get_mouse()
-    fundo = GameImage("assets/Fundo.png")
-    janela.set_title("DIFICULDADES SPACE INVADERS VICTOR TELES")
-    teclado = janela.get_keyboard()
-    botaofacil = Sprite("assets/facil.png")
-    botaomedio = Sprite("assets/medio.png")
-    botaodificil = Sprite("assets/dificil.png")
-    botaofacil.set_position((janela.width - botaofacil.width) / 2, botaofacil.height * 2)
-    botaomedio.set_position((janela.width - botaomedio.width) / 2, botaomedio.height * 5)
-    botaodificil.set_position((janela.width - botaodificil.width) / 2, botaodificil.height * 8)
-
-    while True:
-        fundo.draw()
-        if teclado.key_pressed("esc"):
-            menu()
-        if mouse.is_button_pressed(1):
-            if mouse.is_over_object(botaofacil):
-                import Main
-                Main.jogar()
-            if mouse.is_over_object(botaomedio):
-                import Main
-                Main.jogar()
-            if mouse.is_over_object(botaodificil):
-                import Main
-                Main.jogar()
-                janela.close()
-        botaofacil.draw()
-        botaomedio.draw()
-        botaodificil.draw()
-        janela.update()
 menu()
