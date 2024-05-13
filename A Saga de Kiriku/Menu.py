@@ -76,16 +76,55 @@ def Tutorial():
         w.draw()
         w2.draw()
         w3.draw()
+        janela.draw_text("or", 813, 146, size=16, font_name="Tempus Sans ITC", bold=True,
+                         color=[0, 0, 0])
+        janela.draw_text("or", 812, 388, size=16, font_name="Tempus Sans ITC", bold=True,
+                         color=[0, 0, 0])
+        janela.draw_text("and", 810, 347, size=16, font_name="Tempus Sans ITC", bold=True,
+                         color=[0, 0, 0])
+        janela.draw_text("and", 810, 427, size=16, font_name="Tempus Sans ITC", bold=True,
+                         color=[0, 0, 0])
+
         janela.update()
 def game():
     janela = Window(1100, 619)
     fundo = GameImage("Assets/Fundo3.jpg")
     janela.set_title("JOGAR KIRIKU")
+    inimigo = Sprite("Assets\\inimigo1.png")
+    inimigo2 = Sprite("Assets\\inimigo2.png")
+    inimigo.x = (janela.width - janela.height) / 2
+    inimigo.y = janela.height - inimigo.height
+    inimigo2.x = (janela.width - janela.height) / 2
+    inimigo2.y = janela.height - inimigo2.height
+    comandos = Window.get_keyboard()
+    velini1 = 400
+    velini2 = 400
     teclado = janela.get_keyboard()
     while True:
+        fundo.draw()
         if teclado.key_pressed("esc"):
             menu()
-        fundo.draw()
+        if (comandos.key_pressed("A")):
+            inimigo.x -= velini1 * janela.delta_time()
+        if (comandos.key_pressed("D")):
+            inimigo.x += velini1 * janela.delta_time()
+        if (inimigo.x <= 0):
+            inimigo.x = 0
+        if (inimigo.x >= janela.width - inimigo.width):
+            inimigo.x = janela.width - inimigo.width
+
+        if (comandos.key_pressed("left")):
+            inimigo2.x -= velini2 * janela.delta_time()
+        if (comandos.key_pressed("right")):
+            inimigo2.x += velini2 * janela.delta_time()
+        if (inimigo2.x <= 0):
+            inimigo2.x = 0
+        if (inimigo2.x >= janela.width - inimigo2.width):
+            inimigo2.x = janela.width - inimigo2.width
+        inimigo.draw()
+        inimigo2.draw()
+        janela.draw_text("0000 m", 900, 50, size=16, font_name="Tempus Sans ITC", bold=True,
+                         color=[0, 0, 0])
         janela.update()
 
 menu()
