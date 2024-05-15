@@ -40,6 +40,13 @@ def game():
     jsc = 0
     velocidade_fundo = 100
 
+    pygame.mixer.init()
+
+    # Carregue a música
+    pygame.mixer.music.load('Assets\\Musica.mp3')
+
+    # Tocar a música
+    pygame.mixer.music.play(-1)
     while True:
         fundo.draw()
         fundo2.draw()
