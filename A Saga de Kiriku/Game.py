@@ -5,6 +5,7 @@ from PPlay.sprite import *
 def game():
     janela = Window(1100, 619)
     fundo = GameImage("Assets/Fundo3.jpg")
+    fundo2 = GameImage("Assets/Fundo3.jpg")
     janela.set_title("JOGAR KIRIKU")
     personagem = Sprite("Assets\\KIRIKU.png")
     inimigo2 = Sprite("Assets\\inimigo2.png")
@@ -12,6 +13,7 @@ def game():
     jumpskill = Sprite("Assets\\jumpskill.png")
     jumpskill.set_position(janela.width, janela.height - inimigo2.height - 75)
     veljs = 0
+    fundo2.x = fundo.width
     personagem.x = 100
     personagem.y = janela.height - personagem.height
     inimigo.x = janela.width
@@ -36,8 +38,11 @@ def game():
     # Define se o personagem está no chão
     no_chao = True
     jsc = 0
+    velocidade_fundo = 100
+
     while True:
         fundo.draw()
+        fundo2.draw()
         if teclado.key_pressed("esc"):
             import Menu
             Menu.menu()
@@ -58,7 +63,7 @@ def game():
         inimigo.x -= velini1
         if inimigo.x < -inimigo.width:
             inimigo.x = janela.width
-        if int(x) % 750 == 0 and x<6050:
+        if int(x) % 750 == 0 and x<6050 and x!=0:
             velini1 += 0.015
             velini2 += 0.015
 
@@ -96,6 +101,15 @@ def game():
             gameover()
         if personagem.collided(inimigo2):
             gameover()
+        if janela.delta_time() > 0:
+            fundo.x -= velocidade_fundo * janela.delta_time()
+            fundo2.x -= velocidade_fundo * janela.delta_time()
+
+            if fundo.x <= -fundo.width:
+                fundo.x = fundo2.x + fundo2.width
+
+            if fundo2.x <= -fundo2.width:
+                fundo2.x = fundo.x + fundo.width
         x+= velini2 / 10
         personagem.draw()
         inimigo2.draw()
