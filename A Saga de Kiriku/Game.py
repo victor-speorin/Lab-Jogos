@@ -2,10 +2,14 @@ from PPlay.window import *
 from PPlay.gameimage import *
 from PPlay.sprite import *
 
+from PPlay.window import *
+from PPlay.gameimage import *
+from PPlay.sprite import *
+
 def game(velper, veladd, limite):
     janela = Window(1100, 619)
-    fundo = GameImage("Assets/Fundo3.jpg")
-    fundo2 = GameImage("Assets/Fundo3.jpg")
+    fundo = GameImage("Assets/FundoG.jpg")
+    fundo2 = GameImage("Assets/FundoG.jpg")
     janela.set_title("JOGAR KIRIKU")
     personagem = Sprite("Assets\\KIRIKU.png")
     inimigo2 = Sprite("Assets\\inimigo2.png")
@@ -41,7 +45,7 @@ def game(velper, veladd, limite):
     pygame.mixer.init()
 
     # Carregue a música
-    pygame.mixer.music.load('Assets\\Musica.mp3')
+    pygame.mixer.music.load('Músicas\\MusicaGame.mp3')
 
     # Tocar a música
     pygame.mixer.music.play(-1)
@@ -115,7 +119,7 @@ def game(velper, veladd, limite):
 
             if fundo2.x <= -fundo2.width:
                 fundo2.x = fundo.x + fundo.width
-        x+= velini2 / 10
+        x += velini2 / 10
         personagem.draw()
         inimigo2.draw()
         inimigo.draw()

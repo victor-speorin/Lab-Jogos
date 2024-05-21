@@ -7,7 +7,7 @@ def menu():
     janela = Window(1100, 561)
     mouse = janela.get_mouse()
     janela.set_title("MENU KIRIKU")
-    fundo = GameImage("Assets\\Fundo2.jpg")
+    fundo = GameImage("Assets\\FundoM.jpg")
     ranking = Sprite("Assets\\BotaoRanking.png")
     jogar = Sprite("Assets\\BotaoJogar.png")
     sair = Sprite("Assets\\BotaoSair.png")
@@ -29,7 +29,8 @@ def menu():
             if mouse.is_over_object(tutorial):
                 Tutorial()
             if mouse.is_over_object(ranking):
-                Dificuldade()
+                import Dificuldade
+                Dificuldade.Dificuldade()
         fundo.draw()
         titulo.draw()
         jogar.draw()
@@ -37,38 +38,13 @@ def menu():
         tutorial.draw()
         ranking.draw()
         janela.update()
-
-def Dificuldade():
-    janela = Window(1100, 761)
-    janela.set_title("DIFICULDADE KIRIKU")
-    mouse = janela.get_mouse()
-    fundo = GameImage("Assets\\Difi1.png")
-    hardcore = Sprite("Assets\\hardcore.jpg")
-    mole = Sprite("Assets\\facil.jpg")
-    voltar = Sprite("Assets\\Voltar.png")
-    teclado = janela.get_keyboard()
-    voltar.set_position(10, 10)
-    mole.set_position(100,200)
-    hardcore.set_position(800,200)
-    while True:
-        if teclado.key_pressed("esc"):
-            menu()
-        if mouse.is_button_pressed(1):
-            if mouse.is_over_object(voltar):
-                menu()
-        fundo.draw()
-        voltar.draw()
-        hardcore.draw()
-        mole.draw()
-        janela.update()
-
 def Tutorial():
     janela = Window(1100, 619)
     mouse = janela.get_mouse()
     jump = Sprite("Assets\\Jump.png")
     w = Sprite("Assets\\W.png")
     space = Sprite("Assets\\Space.png")
-    fundo = GameImage("Assets/TutoF.jpg")
+    fundo = GameImage("Assets/FundoT.jpg")
     voltar = Sprite("Assets\\Voltar.png")
     voltar.set_position(10, 10)
     jump.set_position(750, 70)
