@@ -1,8 +1,10 @@
 # Importando
 import Tiros
+from PPlay.sprite import Sprite
 from PPlay.window import *
 from PPlay.sprite import *
 from PPlay.gameimage import *
+
 
 
 def criamonstros(lin, cols, spacing, screen_width):
@@ -51,13 +53,11 @@ def move_monsters(monsters, direction, delta_time, screen_width):
                 monster.x += vel * delta_time
             else:
                 monster.x -= vel * delta_time
-
     # Mover para baixo se necessário
     if move_monstro:
         for row in monsters:
             for monster in row:
                 monster.y += monster.height // 2
-
     return direction
 
 # Criando a função principal que será chamada no código do menu e virá para a tela do jogo.
@@ -75,6 +75,8 @@ def jogar():
 
     # Criando a variável de comandos
     comandos = Window.get_keyboard()
+
+    c=0
 
     # Defino o frame per second
     FPS = 60
@@ -111,6 +113,7 @@ def jogar():
         # Conto o fps
         clock.tick(FPS)
 
+
         # Se o esc for apertado, retorna para o menu
         if comandos.key_pressed('esc'):
             import Menu
@@ -140,6 +143,8 @@ def jogar():
             disparos = Tiros.novo_tiro(nave, disparos)
             recarga = 0
 
+
+
         # desenha, controla e limita o disparo
         if (disparos != []):
             for d in disparos:
@@ -147,7 +152,20 @@ def jogar():
                 d.y -= veltiro * janela.delta_time()
                 d = Tiros.limitando_tiro(d, disparos)
 
-                # Mover e desenhar os monstros
+                # Verificar colisão com monstros
+                if d is not None:
+                    for row in monsters[:]:
+                        for monster in row[:]:
+                            if d.collided(monster):
+                                row.remove(monster)
+                                disparos.remove(d)
+                                c+=1
+                                break  # Sai do loop interno
+                        else:
+                            continue  # Continua se o loop interno não foi quebrado
+                        break  # Quebra o loop externo se o loop interno foi quebrado
+
+        # Mover e desenhar os monstros
         monster_direction = move_monsters(monsters, monster_direction, delta_time, largura)
         # Desenhe os monstros
         desenhamonstros(monsters)
@@ -155,6 +173,12 @@ def jogar():
         # Verificar se os monstros alcançaram o jogador
         if monstroslimite(monsters, nave):
             gameover()
+
+        if c==50:
+            gamewin()
+
+        janela.draw_text("score:" + str(int(c)), (janela.width /2) - 420, 30, size=25, font_name="Courier New", bold=True,
+                         color=[255, 255, 255])
 
         nave.draw()
         janela.update()
@@ -183,3 +207,29 @@ def gameover():
             import Menu
             Menu.menu()
         janela.update()
+
+def gamewin():
+    janela = Window(1000, 750)
+    fundo = GameImage("Assets/FundoV.png")
+    janela.set_title("VITORIA")
+    mouse = janela.get_mouse()
+    teclado = janela.get_keyboard()
+    botaojogar = Sprite("Assets\\Jogar.png")
+    botaosair = Sprite("Assets\\Sair.png")
+    botaojogar.set_position((janela.width - botaojogar.width) / 2, botaojogar.height * 1.5)
+    botaosair.set_position((janela.width - botaosair.width) / 2, botaosair.height * 6.7)
+    while True:
+        fundo.draw()
+        botaojogar.draw()
+        botaosair.draw()
+        if mouse.is_button_pressed(1):
+            if mouse.is_over_object(botaojogar):
+                import Menu
+                Menu.menu()
+            if mouse.is_over_object(botaosair):
+                janela.close()
+        if teclado.key_pressed("esc"):
+            import Menu
+            Menu.menu()
+        janela.update()
+

@@ -14,10 +14,12 @@ def novo_tiro(nave, lista_de_tiros):
 
     return lista_de_tiros
 
-
 def limitando_tiro(tiro, lista_de_tiros):
     if (tiro.y <= tiro.height * 3):
         tiro.update()
 
     if (tiro.y <= 0):
         lista_de_tiros.remove(tiro)
+        return None  # Retorna None se o tiro foi removido
+
+    return tiro  # Retorna o tiro se ele não foi removido
