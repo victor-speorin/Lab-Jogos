@@ -23,3 +23,28 @@ def limitando_tiro(tiro, lista_de_tiros):
         return None  # Retorna None se o tiro foi removido
 
     return tiro  # Retorna o tiro se ele não foi removido
+
+def tiro_monstro(monsters, disparos_monstros, max_tiros):
+    # Obter uma lista plana de todos os monstros
+    todos_monstros = [monster for row in monsters for monster in row]
+    # Embaralhar a lista para obter uma ordem aleatória
+    random.shuffle(todos_monstros)
+    # Selecionar um subconjunto de monstros para atirar
+    monstros_atiradores = todos_monstros[:max_tiros]
+
+    for monster in monstros_atiradores:
+        tiro = Sprite("Assets\\TiroIn.jpg")
+        tiro.x = monster.x + monster.width / 2
+        tiro.y = monster.y + monster.height
+        disparos_monstros.append(tiro)
+
+    return disparos_monstros
+
+# Função para mover os tiros dos monstros
+def move_tiros_monstros(disparos_monstros, delta_time, altura, veltiro):
+    for tiro in disparos_monstros[:]:
+        tiro.y += veltiro * delta_time
+        if tiro.y > altura:  # Se o tiro sair da tela, remova-o
+            disparos_monstros.remove(tiro)
+    return disparos_monstros
+

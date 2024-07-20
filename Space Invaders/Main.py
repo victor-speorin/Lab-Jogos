@@ -4,8 +4,7 @@ from PPlay.sprite import Sprite
 from PPlay.window import *
 from PPlay.sprite import *
 from PPlay.gameimage import *
-
-
+import random
 
 def criamonstros(lin, cols, spacing, screen_width):
     monsters = []
@@ -33,7 +32,7 @@ def desenhamonstros(monsters):
         for monster in row:
             monster.draw()
 def move_monsters(monsters, direction, delta_time, screen_width):
-    vel = 300  # velocidade dos monstros
+    vel = 190  # velocidade dos monstros
     move_monstro = False
 
     # Verificar colisões com as bordas da tela
@@ -77,6 +76,7 @@ def jogar():
     comandos = Window.get_keyboard()
 
     c=0
+    cver = 0
 
     # Defino o frame per second
     FPS = 60
@@ -88,7 +88,21 @@ def jogar():
     nave.y = janela.height - nave.height - 10
     nave.set_sequence_time(0, 2, 200, True)
 
+    # criação escudos
+    escudo1 = Sprite("Assets//Escudo1.png")
+    escudo2 = Sprite("Assets//Escudo2.png")
+    escudo3 = Sprite("Assets//Escudo1.png")
+    escudo2.set_position(largura / 2 - nave.width / 2, janela.height - nave.height - 25)
+    escudo1.set_position(850, janela.height - nave.height - 25)
+    escudo3.set_position(90, janela.height - nave.height - 25)
+    c1 = 0
+    c2 = 0
+    c3 = 0
+
     velnave = 400
+
+    vidas = 3  # Número inicial de vidas do jogador
+    tempo_entre_tiros = 1.5  # Tempo base entre tiros dos monstros
 
     # CRIAÇÃO DOS DISPAROS
     disparos = []
@@ -106,6 +120,9 @@ def jogar():
 
     monster_direction = "right"
 
+    disparos_monstros = []  # Lista para armazenar os tiros dos monstros
+    tempo_ultimo_tiro = 0
+
     # Loop
     while True:
         delta_time = janela.delta_time()
@@ -119,6 +136,7 @@ def jogar():
             import Menu
             Menu.menu()
         fundo.draw()
+
 
         # COMANDOS RELACIONADOS A NAVE:
 
@@ -136,12 +154,85 @@ def jogar():
 
         # COMANDOS RELACIONADOS A TIROS:
 
+        tempo_ultimo_tiro += delta_time
+
         recarga += janela.delta_time()
+
+        xant = nave.x
+        yant = nave.y
+
+        if comandos.key_pressed("space") and recarga >= 1 / 2:
+            cver += 1
+            if cver == 5:
+                # Altere a cor da nave para vermelho após 5 tiros consecutivos
+                nave = Sprite("Assets//navevermelha.png")
+                nave.x = xant
+                nave.y = yant
+            elif cver == 10:
+                # Após mais 5 tiros consecutivos, o jogador perde uma vida
+                vidas -= 1
+                if vidas <= 0:
+                    gameover()
+                else:
+                    # Volte à nave padrão e centralize-a
+                    nave = Sprite("Assets//nave.png")
+                    nave.x = largura / 2 - nave.width / 2
+                    nave.y = yant
+                # Redefina o contador após perder uma vida
+                cver = 0
+        elif not comandos.key_pressed("space"):
+            # Se a tecla de espaço não estiver pressionada, redefina o contador
+            cver = 0
+            nave = Sprite("Assets//nave.png")
+            nave.x = xant
+            nave.y = yant
+
+        if tempo_ultimo_tiro >= tempo_entre_tiros:
+            disparos_monstros = Tiros.tiro_monstro(monsters, disparos_monstros,3)
+            tempo_ultimo_tiro = 0
+            tempo_entre_tiros = random.uniform(1, 2)  # Tempo aleatório para o próximo tiro
 
         # ativar o tiro assim que o espaço for pressionado e respeitando o tempo de recarga
         if (comandos.key_pressed("space")) and (recarga >= 1 / 2) :
             disparos = Tiros.novo_tiro(nave, disparos)
             recarga = 0
+
+        for tiro in disparos[:]:
+            for escudo in [escudo1, escudo2, escudo3]:
+                if tiro.collided(escudo):
+                    disparos.remove(tiro)
+
+            # Mova os tiros dos monstros
+        disparos_monstros = Tiros.move_tiros_monstros(disparos_monstros, delta_time,altura,veltiro)
+
+        # Verifique se algum tiro atingiu o jogador
+        for tiro in disparos_monstros[:]:
+            if tiro.collided(nave):
+                disparos_monstros.remove(tiro)
+                vidas -= 1
+                nave.x = largura / 2 - nave.width / 2  # Centraliza a nave
+                if vidas <= 0:
+                    gameover()
+                break
+
+
+
+        for tiro in disparos_monstros:
+            if tiro.collided(escudo1):
+                c1+=1
+                disparos_monstros.remove(tiro)
+                if c1>=3:
+                    escudo1.set_position(-10,-10)
+            if tiro.collided(escudo2):
+                c2+=1
+                disparos_monstros.remove(tiro)
+                if c2>=3:
+                    escudo2.set_position(-10,-10)
+            if tiro.collided(escudo3):
+                c3 += 1
+                disparos_monstros.remove(tiro)
+                if c3>=3:
+                    escudo3.set_position(-10,-10)
 
 
 
@@ -179,8 +270,16 @@ def jogar():
 
         janela.draw_text("score:" + str(int(c)), (janela.width /2) - 420, 30, size=25, font_name="Courier New", bold=True,
                          color=[255, 255, 255])
+        janela.draw_text("vidas:" + str(int(vidas)), (janela.width / 2) + 350, 30, size=25, font_name="Courier New",
+                         bold=True,
+                         color=[255, 255, 255])
 
+        for tiro in disparos_monstros:
+            tiro.draw()
         nave.draw()
+        escudo1.draw()
+        escudo2.draw()
+        escudo3.draw()
         janela.update()
 
 def gameover():

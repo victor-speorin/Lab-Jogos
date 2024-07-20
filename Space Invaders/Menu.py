@@ -31,6 +31,8 @@ def menu():
                 dificuldade()
             if mouse.is_over_object(sair):
                 janela.close()
+            if mouse.is_over_object(ranking):
+                rank()
         fundo.draw()
         titulo.draw()
         titulo2.draw()
@@ -40,6 +42,25 @@ def menu():
         sair.draw()
         janela.update()
 
+
+def rank():
+    janela = Window(1000, 600)
+    mouse = janela.get_mouse()
+    fundo = GameImage("assets/Fundo.png")
+    janela.set_title("RANKING SPACE INVADERS VICTOR TELES")
+    teclado = janela.get_keyboard()
+
+    while True:
+        fundo.draw()
+        janela.draw_text("João............30", (janela.width / 2) - 155, 200, size=32, font_name="Courier New",
+                         bold=True,
+                         color=[255, 255, 255])
+        janela.draw_text("Pedro...........40", (janela.width / 2) - 155, 270, size=32, font_name="Courier New",
+                         bold=True,
+                         color=[255, 255, 255])
+        if teclado.key_pressed("esc"):
+            menu()
+        janela.update()
 def game():
     janela = Window(1000, 600)
     fundo = GameImage("assets/Fundo.png")

@@ -1,11 +1,18 @@
 from PPlay.window import *
 from PPlay.gameimage import *
 from PPlay.sprite import *
+import datetime
 
-def game(velper, veladd, limite):
-    janela = Window(1100, 619)
-    fundo = GameImage("Assets/FundoG.jpg")
-    fundo2 = GameImage("Assets/FundoG.jpg")
+def game(velper, veladd, limite, dificuldade):
+    janela = Window(1099, 619)
+    hora = datetime.datetime.now().time()
+    y = hora.hour
+    if(y > 18 or y < 6):
+        fundo = GameImage("Assets\\Fundonoite.png")
+        fundo2 = GameImage("Assets\\Fundonoite.png")
+    if(y > 6 and y < 18):
+        fundo = GameImage("Assets\\Fundoteste.png")
+        fundo2 = GameImage("Assets\\Fundoteste.png")
     janela.set_title("JOGAR KIRIKU")
     personagem = Sprite("Assets\\KIRIKU.png")
     inimigo2 = Sprite("Assets\\inimigo2.png")
@@ -22,14 +29,14 @@ def game(velper, veladd, limite):
     inimigo2.y = janela.height - inimigo2.height
     comandos = Window.get_keyboard()
     x = 0000
-    velini1 = 0.7
-    velini2 = 0.7
+    velini1 = 1.5
+    velini2 = 1.5
     teclado = janela.get_keyboard()
     # Define a velocidade de pulo
-    velocidade_pulo = 2.8
+    velocidade_pulo = 13
 
     # Define a gravidade
-    gravidade = 0.018
+    gravidade = 0.42
 
     # Define a velocidade vertical inicial
     velocidade_vertical = 0
@@ -50,6 +57,7 @@ def game(velper, veladd, limite):
         fundo.draw()
         fundo2.draw()
         if teclado.key_pressed("esc"):
+            pygame.mixer.music.stop()
             import Menu
             Menu.menu()
         if (comandos.key_pressed("left") or comandos.key_pressed("A")):
@@ -70,21 +78,21 @@ def game(velper, veladd, limite):
         if inimigo.x < -inimigo.width:
             inimigo.x = janela.width
         if int(x) % veladd == 0 and x<6050 and x>50:
-            velini1 += 0.015
-            velini2 += 0.015
-
+            velini1 += 0.3
+            velini2 += 0.3
+            velocidade_fundo += 10
         if int(x) % 7000 == 0:
-            velini1 += 0.02
-            velini2 += 0.02
+            velini1 += 0.6
+            velini2 += 0.6
         if personagem.collided(jumpskill):
-            gravidade = 0.012
-            velocidade_pulo = 2.8
+            gravidade = 0.17
+            velocidade_pulo = 10
             jumpskill.x = janela.width
             veljs = 0
             efeito.play()
         if (int(x) - 1500) % 2000 == 0:
-            velocidade_pulo = 2.8
-            gravidade = 0.018
+            velocidade_pulo = 13
+            gravidade = 0.42
         # Se a tecla de pulo for pressionada e o personagem estiver no chão
         if (teclado.key_pressed("UP") or teclado.key_pressed("W") or teclado.key_pressed("SPACE")) and no_chao:
                 # Faz o personagem pular
@@ -99,7 +107,8 @@ def game(velper, veladd, limite):
         jumpskill.x -= veljs
             # Aplica a gravidade
         velocidade_vertical += gravidade
-
+        if int(x) == 10000 and dificuldade == 3:
+            easteregg()
             # Atualiza a posição vertical do personagem
         personagem.y += velocidade_vertical
 
@@ -151,13 +160,47 @@ def gameover():
         botaosair.draw()
         if mouse.is_button_pressed(1):
             if mouse.is_over_object(botaomenu):
+                efeitobotao.play()
+                import Menu
+                Menu.menu()
+            if mouse.is_over_object(botaosair):
+                janela.close()
+        if teclado.key_pressed("esc"):
+            efeitobotao.play()
+            import Menu
+            Menu.menu()
+        janela.update()
+
+def easteregg():
+    janela = Window(1100, 619)
+    fundo = GameImage("Assets/fundoee.jpg")
+    janela.set_title("easteregg")
+    mouse = janela.get_mouse()
+    teclado = janela.get_keyboard()
+    botaomenu = Sprite("Assets\\BotaoMenu.png")
+    botaosair = Sprite("Assets\\BotaoSair.png")
+    botaomenu.set_position(200, 200)
+    botaosair.set_position(800, 200)
+    pygame.mixer.init()
+    pygame.mixer.music.load('Assets\\kiriku.mp3')
+    pygame.mixer.music.set_volume(0.7)
+    pygame.mixer.music.play(-1)
+    efeitobotao = pygame.mixer.Sound('Assets\\efeitobotao.flac')
+    while True:
+        fundo.draw()
+        botaomenu.draw()
+        botaosair.draw()
+        if mouse.is_button_pressed(1):
+            if mouse.is_over_object(botaomenu):
                 import Menu
                 efeitobotao.play()
                 Menu.menu()
+                pygame.mixer.music.stop()
             if mouse.is_over_object(botaosair):
                 janela.close()
         if teclado.key_pressed("esc"):
             import Menu
             efeitobotao.play()
+            pygame.mixer.music.stop()
             Menu.menu()
         janela.update()
